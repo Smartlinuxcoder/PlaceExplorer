@@ -55,5 +55,3 @@ This will start the development server, and you can access the application at `h
 * `app.css`: Global styles for the application
 * `geoguessr.css`: Styles for the place exploration interface
 * `input.css`: Styles for the input component
-
-Note: This README is a basic template and may need to be updated to reflect the actual features and components of the application.

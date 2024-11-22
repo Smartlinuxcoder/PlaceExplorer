@@ -14,8 +14,6 @@ function PlaceExplorer() {
   const [lives, setLives] = createSignal(3);
   const [hearts, setHearts] = createSignal("❤️❤️❤️");
   const [hint, setHint] = createSignal("");
-  const [guessedPoints, setGuessedPoints] = createSignal([]);
-
   createEffect(() => {
     setHearts(lives() > 0 ? "❤️".repeat(lives()) : "");
   });
@@ -36,7 +34,6 @@ function PlaceExplorer() {
     "south-west": "↙️",
   };
 
-  const distanceIcon = "📏";
 
   const initialize = () => {
     const panorama = new google.maps.StreetViewPanorama(panoRef, {

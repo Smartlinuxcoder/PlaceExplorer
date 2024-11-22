@@ -3,9 +3,6 @@ import { createSignal } from "solid-js";
 import "./input.css"; // Import the CSS file
 
 function Autocomplete({ onMessage }) {
-    const sendMessageToParent = () => {
-        onMessage("Hello from child!");
-    };
     const [inputValue, setInputValue] = createSignal("");
     const [suggestions, setSuggestions] = createSignal([]);
     const [filteredSuggestions, setFilteredSuggestions] = createSignal([]);
