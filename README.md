@@ -12,6 +12,7 @@ A SolidStart application for exploring places.
 * [Getting Started](#host-it-yourself)
 * [API](#api)
 * [Styles](#styles)
+* [Credits](#credits)
 
 ## Features
 --------
@@ -55,3 +56,9 @@ This will start the development server, and you can access the application at `h
 * `app.css`: Global styles for the application
 * `geoguessr.css`: Styles for the place exploration interface
 * `input.css`: Styles for the input component
+
+
+## Credits
+-------
+
+Thanks to [Simplemaps](https://simplemaps.com/data/world-cities) for their csv dataset
