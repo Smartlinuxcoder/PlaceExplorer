@@ -10,7 +10,7 @@ function Autocomplete({ onMessage }) {
     const [suggestions, setSuggestions] = createSignal([]);
     const [filteredSuggestions, setFilteredSuggestions] = createSignal([]);
 
-    // Fetch suggestions from the CSV file on component mount
+
     const fetchSuggestions = async () => {
         try {
             const response = await fetch("countries.csv");
