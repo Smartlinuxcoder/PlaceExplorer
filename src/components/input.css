@@ -1,0 +1,92 @@
+.autocomplete-container {
+    display: flex;
+    position: relative;
+    width: 300px;
+    z-index: 9999;
+    gap: 8px;
+  }
+  
+  .autocomplete-input {
+    width: 100%;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+  
+  .autocomplete-input:focus {
+    outline: none;
+    border-color: #4a9eff;
+    box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
+  }
+  
+  .geo-submit {
+    padding: 8px 16px;
+    background-color: #4a9eff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .geo-submit:hover {
+    background-color: #3b7fd9;
+    transform: translateY(-1px);
+  }
+  
+  .geo-submit:active {
+    transform: translateY(0);
+  }
+  
+  .suggestions-list {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    list-style: none;
+    margin: 0 0 8px 0;
+    padding: 4px;
+    z-index: 9999;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    max-height: 250px;
+    overflow-y: auto;
+  }
+  
+  .suggestions-list::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .suggestions-list::-webkit-scrollbar-track {
+    background: #1e1e1e;
+    border-radius: 4px;
+  }
+  
+  .suggestions-list::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+  }
+  
+  .suggestions-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  .suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    color: #ffffff;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+  }
+  
+  .suggestion-item:hover {
+    background-color: #2d2d2d;
+  }
