@@ -1,5 +1,5 @@
 {
-  "name": "example-basic",
+  "name": "place-explorer",
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
@@ -13,6 +13,8 @@
     "@solidjs/start": "^1.0.10",
     "papaparse": "^5.4.1",
     "solid-js": "^1.9.2",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
     "vinxi": "^0.4.3"
   },
   "engines": {

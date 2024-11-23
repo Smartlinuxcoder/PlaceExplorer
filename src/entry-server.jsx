@@ -1,5 +1,9 @@
 // @refresh reload
 import { createHandler, StartServer } from "@solidjs/start/server";
+import { initializeDatabase } from './utils/db';
+
+// Initialize the database when the server starts
+initializeDatabase().then(() => console.log('SQLite in-memory database ready'));
 
 export default createHandler(() => (
   <StartServer
