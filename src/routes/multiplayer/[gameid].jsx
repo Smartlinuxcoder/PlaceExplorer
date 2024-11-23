@@ -87,8 +87,8 @@ function PlaceExplorer({ params }) {
                             const currentlat = currentLocation().latLng.lat();
                             const currentlng = currentLocation().latLng.lng();
                             if (
-                                Math.round(currentlat) === Math.round(newLatLng.lat) &&
-                                Math.round(currentlng) === Math.round(newLatLng.lng)
+                                Math.trunc(currentlat) === Math.trunc(newLatLng.lat) &&
+                                Math.trunc(currentlng) === Math.trunc(newLatLng.lng)
                             ) {
                                 console.log("Same location. Retrying...");
                                 updateGameAndRetry();
