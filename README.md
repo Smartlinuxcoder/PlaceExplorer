@@ -3,6 +3,8 @@
 # PlaceExplorer
 ================
 
+A geoguessr-like website, but free and without any ads!
+
 ## Features
 --------
 
@@ -28,10 +30,15 @@
 
 ## Host it yourself
 ---------------
+Add a Google Maps api key to .env:
+
+* `VITE_GOOGLE_MAPS_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`
+
 
 To run the application, navigate to the project directory and execute the command:
 
 ```bash
+bun install
 bun run dev
 ```
 
@@ -50,6 +57,9 @@ This will start the development server, and you can access the application at `h
 ----
 
 * `GET /api/getPlace`: Returns a random city as JSON
+* `GET /api/startGame`: Starts a game and returns a random code
+* `GET /api/getGame/:gameId`: Returns a game's information as JSON
+* `GET /api/updateGame/:gameId`: Changes the random position of a game
 
 ## Styles
 ------
@@ -62,4 +72,4 @@ This will start the development server, and you can access the application at `h
 ## Credits
 -------
 
-Thanks to [Simplemaps](https://simplemaps.com/data/world-cities) for their csv dataset
+Thanks to [Simplemaps](https://simplemaps.com/data/world-cities) for their csv dataset.
