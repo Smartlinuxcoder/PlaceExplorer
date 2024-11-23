@@ -15,7 +15,7 @@ A geoguessr-like website, but free and without any ads!
 * You have three lives
 * Every time you make a wrong guess, a hint appears at the bottom of the screen!
 
-#[Demo here!](https://placeexplorer.smart.is-a.dev/) 
+# [Demo here!](https://placeexplorer.smart.is-a.dev/) 
 
 ## Table of Contents
 -----------------
