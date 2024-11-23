@@ -72,35 +72,80 @@ function PlaceExplorer({ params }) {
             });
         };
 
-        const loadRandomPanorama = () => {
-            fetch("/api/getGame/" + params.gameid)
+        const loadRandomPanorama = (latlng) => {
+            // If no latlng provided, fetch game data
+            console.log(currentLocation());
+            if (!latlng) {
+                fetch("/api/getGame/" + params.gameid)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        const lat = data[0].latitude;
+                        const lng = data[0].longitude;
+                        const newLatLng = { lat, lng };
+                        console.log(newLatLng);
+                        if (Object.keys(currentLocation()).length !== 0){
+                            const currentlat = currentLocation().latLng.lat();
+                            const currentlng = currentLocation().latLng.lng();
+                            if (
+                                Math.round(currentlat) === Math.round(newLatLng.lat) &&
+                                Math.round(currentlng) === Math.round(newLatLng.lng)
+                            ) {
+                                console.log("Same location. Retrying...");
+                                updateGameAndRetry();
+                            } else {
+                                console.log("Different location. Loading panorama...");
+                                loadPanorama(newLatLng);
+                            }
+                        } else {
+                            console.log("No current location. Loading panorama...");
+                            loadPanorama(newLatLng);
+                        }
+                        
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching game data:", error);
+                    });
+            } else {
+                // Load Street View panorama with provided latlng
+                loadPanorama(latlng);
+            }
+        };
+
+        // Function to update the game with new coordinates and retry loading panorama
+        const updateGameAndRetry = () => {
+            fetch("/api/updateGame/" + params.gameid)
                 .then((response) => response.json())
                 .then((data) => {
                     const lat = data[0].latitude;
                     const lng = data[0].longitude;
-                    console.log(data);
-
-                    const latLng = { lat, lng };
-                    const streetViewService = new google.maps.StreetViewService();
-                    console.log(latLng);
-                    streetViewService.getPanorama({ location: latLng, radius: 5000 }, (data, status) => {
-                        if (status === google.maps.StreetViewStatus.OK) {
-                            panorama.setPosition(data.location.latLng);
-                            setCurrentLocation({
-                                latLng: data.location.latLng,
-                                country: getCountryName(data.location.latLng), // Ensure that randomCountry is defined or replace it
-                            });
-                            getCountryName(data.location.latLng);
-                        } else {
-                            console.log("No panorama found at random location. Retrying...");
-                            loadRandomPanorama(); // Retry loading a random panorama if none is found
-                        }
-                    });
+                    loadRandomPanorama({ lat, lng });
                 })
                 .catch((error) => {
-                    console.error("Error fetching random city:", error);
+                    console.error("Error updating game data:", error);
                 });
         };
+
+        // Function to load the Street View panorama
+        const loadPanorama = (latLng) => {
+            const streetViewService = new google.maps.StreetViewService();
+
+            streetViewService.getPanorama(
+                { location: latLng, radius: 5000 },
+                (data, status) => {
+                    if (status === google.maps.StreetViewStatus.OK) {
+                        panorama.setPosition(data.location.latLng);
+                        setCurrentLocation({
+                            latLng: data.location.latLng,
+                            country: getCountryName(data.location.latLng),
+                        });
+                    } else {
+                        console.log("No panorama found. Retrying...");
+                        loadRandomPanorama(); // Retry if no panorama is found
+                    }
+                }
+            );
+        };
+
 
 
         const getCountryName = (latLng) => {

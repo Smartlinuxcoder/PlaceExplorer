@@ -10,7 +10,7 @@ function Autocomplete({ onMessage }) {
 
     const fetchSuggestions = async () => {
         try {
-            const response = await fetch("countries.csv");
+            const response = await fetch("/countries.csv");
             if (response.ok) {
                 const data = await response.text();
 
