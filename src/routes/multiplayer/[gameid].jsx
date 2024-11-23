@@ -202,7 +202,7 @@ function PlaceExplorer({ params }) {
             const currentCountry = currentLocation().country || "";
             const actualLatLng = currentLocation().latLng;
 
-            if (guess.toLowerCase() === currentCountry.toLowerCase()) {
+            if (guess.trim().toLowerCase() === currentCountry.toLowerCase()) {
                 alert(`Correct! The country is ${currentCountry}!`);
                 setHint("");
                 revealActualLocation({ lat: actualLatLng.lat(), lng: actualLatLng.lng() });
@@ -218,7 +218,7 @@ function PlaceExplorer({ params }) {
                     setLives(3); // Reset lives
                 } else {
                     const guessedCountry = countries.find(
-                        (country) => country.name.toLowerCase() === guess.toLowerCase()
+                        (country) => country.name.toLowerCase() === guess.trim().toLowerCase()
                     );
 
                     if (guessedCountry) {
