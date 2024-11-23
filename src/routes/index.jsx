@@ -1,270 +1,70 @@
-import { createSignal, createEffect, onMount } from "solid-js";
 import { Title } from "@solidjs/meta";
-import Autocomplete from "~/components/Input";
-import Papa from "papaparse";
-import "./geoguessr.css";
+import { createSignal } from "solid-js";
+import  "./indexpage.css";
 
-function PlaceExplorer() {
-  const handleChildMessage = (msg) => {
-    console.log(msg);
-    handlers?.handleGuess(msg);
-  };
-
-  const [currentLocation, setCurrentLocation] = createSignal({});
-  const [lives, setLives] = createSignal(3);
-  const [hearts, setHearts] = createSignal("❤️❤️❤️");
-  const [hint, setHint] = createSignal("");
-  createEffect(() => {
-    setHearts(lives() > 0 ? "❤️".repeat(lives()) : "");
-  });
-  let panoRef;
-  let countries = [];
-  let mapRef;
-  let map;
-  let marker;
-
-  const directionIcons = {
-    north: "⬆️",
-    south: "⬇️",
-    east: "➡️",
-    west: "⬅️",
-    "north-east": "↗️",
-    "north-west": "↖️",
-    "south-east": "↘️",
-    "south-west": "↙️",
-  };
-
-
-  const initialize = () => {
-    const panorama = new google.maps.StreetViewPanorama(panoRef, {
-      pov: {
-        heading: 34,
-        pitch: 10,
-      },
-    });
-
-    // Initialize minimap (Google Map)
-    map = new google.maps.Map(mapRef, {
-      center: { lat: 0, lng: 0 },
-      zoom: 2,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-    });
-
-    // Add markers for guessed points
-    const addGuessedMarker = (latLng) => {
-      new google.maps.Marker({
-        position: latLng,
-        map: map,
-        icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-      });
-    };
-
-    const loadCountryData = () => {
-      Papa.parse("/countryList.csv", {
-        download: true,
-        header: true,
-        dynamicTyping: true,
-        complete: function (results) {
-          countries = results.data;
-          console.log(countries);
-          loadRandomPanorama();
-        },
-      });
-    };
-
-    const loadRandomPanorama = () => {
-      fetch("/api/getPlace")
-        .then((response) => response.json())
-        .then((data) => {
-          const lat = data.lat;
-          const lng = data.lng;
-          console.log(data);
-
-          const latLng = { lat, lng };
-          const streetViewService = new google.maps.StreetViewService();
-
-          streetViewService.getPanorama({ location: latLng, radius: 5000 }, (data, status) => {
-            if (status === google.maps.StreetViewStatus.OK) {
-              panorama.setPosition(data.location.latLng);
-              setCurrentLocation({
-                latLng: data.location.latLng,
-                country: getCountryName(data.location.latLng), // Ensure that randomCountry is defined or replace it
-              });
-              getCountryName(data.location.latLng);
-            } else {
-              console.log("No panorama found at random location. Retrying...");
-              loadRandomPanorama(); // Retry loading a random panorama if none is found
-            }
-          });
-        })
-        .catch((error) => {
-          console.error("Error fetching random city:", error);
-        });
-    };
-
-
-    const getCountryName = (latLng) => {
-      const geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ location: latLng }, (results, status) => {
-        if (status === "OK" && results[0]) {
-          const countryResult = results.find((result) =>
-            result.types.includes("country")
-          );
-          if (countryResult) {
-            setCurrentLocation((prev) => ({
-              ...prev,
-              country: countryResult.formatted_address,
-            }));
-            console.log("Country found:", countryResult.formatted_address);
-          }
-        } else {
-          console.log("Geocoding failed:", status);
-        }
-      });
-    };
-
-    const calculateDistance = (lat1, lon1, lat2, lon2) => {
-      const R = 6371;
-      const dLat = ((lat2 - lat1) * Math.PI) / 180;
-      const dLon = ((lon2 - lon1) * Math.PI) / 180;
-      const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
-    };
-
-    const calculateDirection = (lat1, lon1, lat2, lon2) => {
-      const latDiff = lat2 - lat1;
-      const lonDiff = lon2 - lon1;
-
-      let direction = "";
-      if (latDiff > 0) direction += "north";
-      else if (latDiff < 0) direction += "south";
-
-      if (lonDiff > 0) direction += direction ? "-east" : "east";
-      else if (lonDiff < 0) direction += direction ? "-west" : "west";
-
-      return direction || "same location";
-    };
-
-    loadCountryData();
-
-    const handleGuess = (guess) => {
-      const currentCountry = currentLocation().country || "";
-      const actualLatLng = currentLocation().latLng;
-
-      if (guess.toLowerCase() === currentCountry.toLowerCase()) {
-        alert(`Correct! The country is ${currentCountry}!`);
-        setHint("");
-        revealActualLocation({ lat: actualLatLng.lat(), lng: actualLatLng.lng() });
-        loadRandomPanorama();
-      } else {
-        setLives(lives() - 1);
-
-        if (lives() === 0) {
-          alert(`Wrong! The correct country was ${currentCountry}.`);
-          revealActualLocation({ lat: actualLatLng.lat(), lng: actualLatLng.lng() });
-          setHint("");
-          loadRandomPanorama();
-          setLives(3); // Reset lives
-        } else {
-          const guessedCountry = countries.find(
-            (country) => country.name.toLowerCase() === guess.toLowerCase()
-          );
-
-          if (guessedCountry) {
-            const distance = calculateDistance(
-              guessedCountry.latitude,
-              guessedCountry.longitude,
-              actualLatLng.lat(),
-              actualLatLng.lng()
-            );
-
-            const direction = calculateDirection(
-              guessedCountry.latitude,
-              guessedCountry.longitude,
-              actualLatLng.lat(),
-              actualLatLng.lng()
-            );
-
-            setHint(() => {
-              const directionIcon = directionIcons[direction] || "❓";
-              return (
-                <>
-                  <span class="hint-icon">{directionIcon}</span>
-                  <span class="hint-text"> {Math.round(distance)} km</span>
-                </>
-              );
-            });
-
-            // Add guessed point to minimap
-            addGuessedMarker({
-              lat: guessedCountry.latitude,
-              lng: guessedCountry.longitude,
-            });
-          } else {
-            setHint(() => (
-              <>
-                <span class="hint-icon">❌</span>
-                <span class="hint-text"> Invalid guess. Try again!</span>
-              </>
-            ));
-          }
-        }
-      }
-    };
-
-    return { handleGuess };
-  };
-
-  const revealActualLocation = (latLng) => {
-    // Show the actual location on the minimap after game over or correct guess
-    new google.maps.Marker({
-      position: latLng,
-      map: map,
-      icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
-    });
-    map.setCenter(latLng);
-    map.setZoom(6);
-  };
-
-  let handlers;
-
-  onMount(() => {
-    const checkGoogleMapsLoaded = () => {
-      if (window.google) {
-        handlers = initialize(); // Call initialize when Google Maps is loaded
-        console.log("Google Maps API loaded successfully!");
-      } else {
-        console.log("Waiting for Google Maps API to load...");
-        setTimeout(checkGoogleMapsLoaded, 10); // Retry after 10ms
-      }
-    };
-
-    checkGoogleMapsLoaded();
-  });
-
+export default function GameMenu() {
+  const [hoveredButton, setHoveredButton] = createSignal(null);
 
   return (
-    <main>
-    <Title>PlaceExplorer</Title>
-    <div class="geo-container">
-      <div id="pano" ref={panoRef} class="geo-pano"></div>
-      <div class="geo-controls">
-        <Autocomplete onMessage={handleChildMessage} />
-        <p class="lives">{hearts()}</p>
-        <div ref={mapRef} class="minimap" ></div>
+    <main class="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-8">
+      <Title>PlaceExplorer</Title>
+      
+      <div class="text-center space-y-12 max-w-2xl mx-auto">
+        <h1 class="text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-transparent bg-clip-text animate-pulse">
+          Let's get started!
+        </h1>
+        
+        <p class="text-xl text-gray-300 mb-8">
+          Choose your adventure mode
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <button
+            class={`
+              px-8 py-4 text-xl font-bold rounded-lg transform transition-all duration-300
+              ${hoveredButton() === 'single' 
+                ? 'scale-105 bg-gradient-to-r from-blue-600 to-blue-400 shadow-lg shadow-blue-500/50' 
+                : 'bg-blue-600 hover:bg-blue-500'
+              }
+            `}
+            onMouseEnter={() => setHoveredButton('single')}
+            onMouseLeave={() => setHoveredButton(null)}
+          >
+            <span class="flex items-center gap-2">
+              <i class="fas fa-user"></i>
+              Singleplayer
+            </span>
+          </button>
+
+          <button
+            class={`
+              px-8 py-4 text-xl font-bold rounded-lg transform transition-all duration-300
+              ${hoveredButton() === 'multi' 
+                ? 'scale-105 bg-gradient-to-r from-green-600 to-green-400 shadow-lg shadow-green-500/50' 
+                : 'bg-green-600 hover:bg-green-500'
+              }
+            `}
+            onMouseEnter={() => setHoveredButton('multi')}
+            onMouseLeave={() => setHoveredButton(null)}
+          >
+            <span class="flex items-center gap-2">
+              <i class="fas fa-users"></i>
+              Multiplayer
+            </span>
+          </button>
+        </div>
+
+        <div class="mt-16 text-gray-400 text-sm">
+          <p>Choose singleplayer for a solo adventure or multiplayer to explore with friends!</p>
+        </div>
       </div>
-      <div class="hint">
-        {hint()}
+
+      {/* Add animated background elements */}
+      <div class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full filter blur-3xl animate-blob"></div>
+        <div class="absolute top-1/3 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full filter blur-3xl animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-1/4 left-1/3 w-96 h-96 bg-green-600/20 rounded-full filter blur-3xl animate-blob animation-delay-4000"></div>
       </div>
-    </div>
     </main>
   );
 }
-
-export default PlaceExplorer;
