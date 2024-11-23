@@ -3,7 +3,17 @@
 # PlaceExplorer
 ================
 
-A SolidStart application for exploring places.
+## Features
+--------
+
+* Explore places using Google Street View
+* Guess the location of a random city
+* View minimap for navigation
+
+* You have three lives
+* Every time you make a wrong guess, a hint appears at the bottom of the screen!
+
+#[Demo here!](https://placeexplorer.smart.is-a.dev/) 
 
 ## Table of Contents
 -----------------
@@ -14,15 +24,6 @@ A SolidStart application for exploring places.
 * [Styles](#styles)
 * [Credits](#credits)
 
-## Features
---------
-
-* Explore places using Google Street View
-* Guess the location of a random city
-* View minimap for navigation
-
-* You have three lives
-* Every time you make a wrong guess, a hint appears at the bottom of the screen!
 
 
 ## Host it yourself
