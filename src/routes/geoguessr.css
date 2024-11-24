@@ -1,15 +1,16 @@
-/* Modern dark theme variables */
 :root {
   --background-dark: #121212;
   --surface-dark: #1e1e1e;
-  --primary-blue: #4a9eff;
-  --primary-hover: #3b7fd9;
+  --primary-blue: linear-gradient(135deg, #649be7, #0015d4);
+  --primary-hover: linear-gradient(135deg, #0050d9, #002fa9);
   --border-dark: #333;
   --text-light: #ffffff;
   --text-secondary: #a0a0a0;
+  --hint-gradient: linear-gradient(90deg, #ff5f91, #ff3863, #ff0a35);
+  --minimap-gradient: linear-gradient(135deg, #828b97, #1b2634);
+  --hint-text-light: #fefefe;
 }
 
-/* General container for the app */
 .geo-container {
   display: flex;
   flex-direction: column;
@@ -17,27 +18,52 @@
   width: 100%;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   position: relative;
-  background-color: var(--background-dark);
+  background: var(--background-dark);
   color: var(--text-light);
 }
 
-/* Panorama container */
 .geo-pano {
   flex: 1;
   z-index: 1;
   position: relative;
   overflow: hidden;
   border-radius: 12px 12px 0 0;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
 }
 
+.hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+  background: var(--hint-gradient);
+  color: var(--hint-text-light);
+  z-index: 9999;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5);
+}
 
+.hint-icon {
+  margin-right: 10px;
+  font-size: 1.7rem;
+}
 
-/* Input field styles */
+.hint-text {
+  font-size: 1.2rem;
+}
+
+.lives {
+  font-size: 1.8rem;
+  color: var(--primary-blue);
+}
+
 .geo-input {
   padding: 12px 16px;
   font-size: 16px;
-  background-color: var(--surface-dark);
+  background: var(--surface-dark);
   border: 1px solid var(--border-dark);
   border-radius: 8px;
   color: var(--text-light);
@@ -47,15 +73,14 @@
 .geo-input:focus {
   outline: none;
   border-color: var(--primary-blue);
-  box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(0, 106, 255, 0.5);
 }
 
-/* Submit styles */
 .geo-submit {
   padding: 12px 24px;
   font-size: 16px;
   font-weight: 500;
-  background-color: var(--primary-blue);
+  background: var(--primary-blue);
   color: var(--text-light);
   border: none;
   border-radius: 8px;
@@ -64,7 +89,7 @@
 }
 
 .geo-submit:hover {
-  background-color: var(--primary-hover);
+  background: var(--primary-hover);
   transform: translateY(-1px);
 }
 
@@ -72,7 +97,6 @@
   transform: translateY(0);
 }
 
-/* Suggestions dropdown styling */
 ul {
   position: absolute;
   bottom: 100%;
@@ -120,7 +144,6 @@ li:hover {
   background-color: #2d2d2d;
 }
 
-/* Hide unwanted StreetView UI elements */
 div[jstcache="22"],
 div[jstcache="50"] {
   display: none !important;
@@ -130,142 +153,35 @@ div[jstcache="50"] {
   display: none !important; 
 }
 
-
-.gm-iv-address * {
-  display: none !important;  
-}
-
-.gm-iv-address .gm-iv-address-description {
-  display: none !important;
-}
-
-.gm-iv-address .gm-iv-short-address-description,
-.gm-iv-address .gm-iv-long-address-description {
-  display: none !important;
-}
-
-.gm-iv-address .gm-iv-profile-url {
-  display: none !important;
-}
-
-.gm-iv-address .gm-iv-address-link {
-  display: none !important;
-}
-
-.gm-iv-address .gm-iv-address-custom {
-  display: none !important;
-}
-
-.gm-iv-address .gm-iv-vertical-separator {
-  display: none !important;
-}
-
-.gm-iv-address .gm-iv-marker {
-  display: none !important;
-}
-
-.gm-iv-address .gm-iv-timeline {
-  display: none !important;
-}
-
-.gm-iv-address .gm-iv-timeline-wrapper {
-  display: none !important;
-}
-
-.gm-iv-address .gm-iv-timeline-description {
-  display: none !important;
-}
-
-.gm-iv-address .gm-iv-timeline-description-details {
-  display: none !important;
-}
-
-.gm-iv-address [jstcache] {
-  display: none !important;
-}
-
-.swal2-popup {
-  background-color: var(--surface-dark) !important;
-  color: var(--text-light) !important;
-  border-radius: 12px !important;
-  border: 1px solid var(--border-dark) !important;
-}
-
-.swal2-title,
-.swal2-content {
-  color: var(--text-light) !important;
-}
-
-.swal2-confirm {
-  background-color: var(--primary-blue) !important;
-  border-radius: 8px !important;
-}
-
-/* Make street view controls darker */
-.gm-style {
-  filter: brightness(0.85);
-}
-
-.hint {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  margin-top: 5px;
-  height: 30px;
-}
-
-.hint-icon {
-  margin-right: 10px;
-  font-size: 2rem;
-}
-
-.hint-text {
-  font-size: 1.2rem;
-  color: #333;
-}
-
-.lives {
-  padding-left: 10px;
-  font-size: 1.8rem;
-}
-
-/* Base layout for larger screens */
 .geo-controls {
-  position: relative;
-  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
   background: var(--surface-dark);
   border-top: 1px solid var(--border-dark);
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
-  flex-wrap: wrap; /* Allow the controls and minimap to wrap if necessary */
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  flex-wrap: wrap;
 }
 
-/* Minimap styling */
 .minimap {
   width: 70%;
   height: 200px;
   margin: 10px auto;
   border: 2px solid #ccc;
   border-radius: 5px;
+  background: var(--minimap-gradient);
 }
 
-/* Responsive styling for mobile devices */
 @media (max-width: 600px) {
   .geo-controls {
-    flex-direction: column; /* Stack the children vertically */
-    align-items: center; /* Center the content */
+    flex-direction: column;
+    align-items: center;
   }
 
-  /* Minimap goes under the guess and lives section */
   .minimap {
-    width: 100%; /* Full width on mobile */
-    height: 180px; /* Adjust height for better fit on smaller screens */
-    margin-top: 15px; /* Add some margin to separate it from the guess section */
+    width: 100%;
+    height: 180px;
+    margin-top: 15px;
   }
 }
-
-

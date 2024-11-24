@@ -21,7 +21,15 @@ export async function initializeDatabase() {
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
-
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL,
+      gameCode TEXT NOT NULL,
+      score INTEGER DEFAULT 3,
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
   console.log('Database initialized');
   return db;
 }

@@ -1,4 +1,4 @@
-import { getDatabase } from '../../../utils/db';
+import { getDatabase } from '../../../../utils/db';
 import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
@@ -19,7 +19,7 @@ const parseCSV = async () => {
     }
 };
 
-export async function GET({ params }) {
+export async function POST({ params }) {
     try {
         const code = params.gamecode; 
         const db = await getDatabase();
