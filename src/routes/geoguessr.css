@@ -50,7 +50,7 @@
   box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
 }
 
-/* Submit button styles */
+/* Submit styles */
 .geo-submit {
   padding: 12px 24px;
   font-size: 16px;
@@ -180,12 +180,10 @@ div[jstcache="50"] {
   display: none !important;
 }
 
-/* In case the elements are still visible, hide those with the jstcache attributes */
 .gm-iv-address [jstcache] {
   display: none !important;
 }
 
-/* Alert styling override (for the correct/wrong messages) */
 .swal2-popup {
   background-color: var(--surface-dark) !important;
   color: var(--text-light) !important;
