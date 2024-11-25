@@ -58,8 +58,8 @@ This will start the development server, and you can access the application at `h
 
 * `GET /api/getPlace`: Returns a random city as JSON
 * `GET /api/startGame`: Starts a game and returns a random code
-* `GET /api/getGame/:gameId`: Returns a game's information as JSON
-* `GET /api/updateGame/:gameId`: Changes the random position of a game
+* `GET /api/getGame/:gameId/:username`: Returns a game's information as JSON
+* `GET /api/updateGame/:gameId/:username`: Changes the random position of a game
 
 ## Styles
 ------
