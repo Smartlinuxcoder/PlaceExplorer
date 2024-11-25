@@ -365,12 +365,12 @@ function PlaceExplorer(props) {
                         </div>
                         <div class="space-y-6">
                             <div class="bg-gray-800/50 backdrop-blur-lg p-6 rounded-lg shadow-2xl border border-gray-700">
-                                <Autocomplete onMessage={handleGuess} />
+                                <Autocomplete class="z-50" onMessage={handleGuess} />
                                 <p class="text-3xl text-center mt-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent">
                                     {hearts()}
                                 </p>
                             </div>
-                            <div ref={mapRef} class="w-full h-60 rounded-lg overflow-hidden shadow-2xl border border-gray-700"></div>
+                            <div ref={mapRef} class="z-10 w-full h-60 rounded-lg overflow-hidden shadow-2xl border border-gray-700"></div>
                             <div class="bg-gray-800/50 backdrop-blur-lg p-4 rounded-lg shadow-2xl border border-gray-700">
                                 <div class="flex items-center justify-center space-x-2 text-lg">
                                     {hint()}
