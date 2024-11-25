@@ -1,4 +1,4 @@
-import { createSignal, createEffect, onMount, onCleanup } from "solid-js";
+import { createSignal, createEffect, onMount, For } from "solid-js";
 import { Title } from "@solidjs/meta";
 import Papa from "papaparse";
 import Autocomplete from "~/components/Input";
@@ -10,6 +10,7 @@ function PlaceExplorer(props) {
     const [lives, setLives] = createSignal(3);
     const [hearts, setHearts] = createSignal("❤️❤️❤️");
     const [hint, setHint] = createSignal("");
+    const [players, setPlayers] = createSignal([]);
     const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = createSignal(false);
     let hasInitialized = false;
     let countries = [];
@@ -94,6 +95,7 @@ function PlaceExplorer(props) {
                         }),
                     });
                 const data = await response.json();
+                setPlayers(data.players);
                 const newLatLng = {
                     lat: data.games[0].latitude,
                     lng: data.games[0].longitude
@@ -383,6 +385,30 @@ function PlaceExplorer(props) {
                             {username()}
                         </span>
                     </footer>
+                    <div class="bg-gray-800/50 backdrop-blur-lg p-6 rounded-lg shadow-2xl border border-gray-700 mt-6">
+                        <h3 class="text-2xl font-bold text-center text-white mb-4">Player Scores</h3>
+                        <table class="w-full text-left table-auto text-white">
+                            <thead>
+                                <tr>
+                                    <th class="px-4 py-2 border-b">Username</th>
+                                    <th class="px-4 py-2 border-b">Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <For each={players()}>
+                                    {(player) => {
+                                        const hearts = "❤️".repeat(player.score); 
+                                        return (
+                                            <tr>
+                                                <td class="px-4 py-2 border-b">{player.username}</td>
+                                                <td class="px-4 py-2 border-b">{hearts}</td>
+                                            </tr>
+                                        );
+                                    }}
+                                </For>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             )}
         </main>

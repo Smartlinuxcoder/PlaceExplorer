@@ -111,6 +111,12 @@ export default function GameMenu() {
         <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full filter blur-3xl animate-blob"></div>
         <div class="absolute top-1/3 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full filter blur-3xl animate-blob animation-delay-2000"></div>
         <div class="absolute bottom-1/4 left-1/3 w-96 h-96 bg-green-600/20 rounded-full filter blur-3xl animate-blob animation-delay-4000"></div>
+        <div class="absolute top-0 left-0 w-72 h-72 bg-gradient-to-r from-pink-500 to-yellow-500 rounded-full opacity-30 blur-2xl animate-pulse"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full opacity-20 blur-3xl"></div>
+        <div class="absolute top-1/3 left-1/4 w-48 h-48 bg-gradient-to-r from-green-400 to-teal-500 rounded-full opacity-40 blur-lg animate-spin-slow"></div>
+        <div class="absolute top-10 right-1/3 w-60 h-60 bg-gradient-to-r from-red-500 to-orange-500 rounded-full opacity-25 blur-xl"></div>
+        <div class="absolute bottom-1/4 left-1/3 w-64 h-64 bg-gradient-to-r from-cyan-500 to-indigo-500 rounded-full opacity-30 blur-2xl"></div>
+
       </div>
 
       {/* Enhanced Modal with Game Code Display */}
