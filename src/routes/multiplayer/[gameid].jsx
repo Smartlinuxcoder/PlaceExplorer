@@ -1,4 +1,4 @@
-import { createSignal, createEffect, onMount, For } from "solid-js";
+import { createSignal, createEffect, onMount, onCleanup, For } from "solid-js";
 import { Title } from "@solidjs/meta";
 import Papa from "papaparse";
 import Autocomplete from "~/components/Input";
@@ -12,15 +12,22 @@ function PlaceExplorer(props) {
     const [hint, setHint] = createSignal("");
     const [players, setPlayers] = createSignal([]);
     const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = createSignal(false);
+    const [isSpectating, setIsSpectating] = createSignal(false);
     let hasInitialized = false;
     let countries = [];
     let panoRef;
     let mapRef;
     let map;
     let panorama;
+    let gameStateFetchInterval;
 
     createEffect(() => {
         setHearts(lives() > 0 ? "❤️".repeat(lives()) : "");
+
+        // When lives reach 0, switch to spectating mode
+        if (lives() === 0 && !isSpectating()) {
+            setIsSpectating(true);
+        }
     });
     createEffect(() => {
         if (isUsernameSet() && !isGoogleMapsLoaded()) {
@@ -38,8 +45,31 @@ function PlaceExplorer(props) {
         if (isUsernameSet() && isGoogleMapsLoaded() && !hasInitialized) {
             hasInitialized = true;
             loadRandomPanorama();
+
+            // Set up periodic game state fetching
+            gameStateFetchInterval = setInterval(fetchGameState, 10000); // Every 10 seconds
         }
     });
+
+    const fetchGameState = async () => {
+        try {
+            const response = await fetch(`/api/getGame/${props.params.gameid}/${username()}`,
+            {
+                    method: "POST",
+                    body: JSON.stringify({
+                        lives: lives(),
+                    }),
+                });
+            const data = await response.json();
+            console.log(data.players)
+
+            // Update players list
+            setPlayers(data.players);
+
+        } catch (error) {
+            console.error("Error fetching game state:", error);
+        }
+    };
     const directionIcons = {
         north: "⬆️",
         south: "⬇️",
@@ -233,6 +263,10 @@ function PlaceExplorer(props) {
     };
 
     const handleGuess = (guess) => {
+        if (isSpectating()) {
+            alert("You are currently spectating. Wait for the next round.");
+            return;
+        }
         const currentCountry = currentLocation().country || "";
         const actualLatLng = currentLocation().latLng;
         console.log(currentCountry);
@@ -251,9 +285,7 @@ function PlaceExplorer(props) {
                 alert(`Wrong! The correct country was ${currentCountry}.`);
                 revealActualLocation({ lat: actualLatLng.lat(), lng: actualLatLng.lng() });
                 setHint("");
-                console.log("line 251");
                 loadRandomPanorama();
-                setLives(3);
             } else {
                 console.log("wrong guess + has lives")
                 const guessedCountry = countries.find(
@@ -316,7 +348,11 @@ function PlaceExplorer(props) {
             map.setDiv(null);
         }
     }); */
-
+    onCleanup(() => {
+        if (gameStateFetchInterval) {
+            clearInterval(gameStateFetchInterval);
+        }
+    });
     return (
         <main class="relative bg-gray-900 text-white min-h-screen overflow-hidden">
             <Title>PlaceExplorer</Title>
@@ -384,6 +420,11 @@ function PlaceExplorer(props) {
                         <span class="text-indigo-400">
                             {username()}
                         </span>
+                        {isSpectating() && (
+                            <span class="ml-2 text-yellow-500">
+                                (Spectating)
+                            </span>
+                        )}
                     </footer>
                     <div class="bg-gray-800/50 backdrop-blur-lg p-6 rounded-lg shadow-2xl border border-gray-700 mt-6">
                         <h3 class="text-2xl font-bold text-center text-white mb-4">Player Scores</h3>
@@ -397,7 +438,7 @@ function PlaceExplorer(props) {
                             <tbody>
                                 <For each={players()}>
                                     {(player) => {
-                                        const hearts = "❤️".repeat(player.score); 
+                                        const hearts = "❤️".repeat(player.score);
                                         return (
                                             <tr>
                                                 <td class="px-4 py-2 border-b">{player.username}</td>
