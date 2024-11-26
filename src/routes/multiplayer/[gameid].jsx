@@ -54,7 +54,7 @@ function PlaceExplorer(props) {
     const fetchGameState = async () => {
         try {
             const response = await fetch(`/api/getGame/${props.params.gameid}/${username()}`,
-            {
+                {
                     method: "POST",
                     body: JSON.stringify({
                         lives: lives(),
@@ -334,7 +334,11 @@ function PlaceExplorer(props) {
         }
     };
 
-    onMount(() => {
+    onMount(async () => {
+        const response = await fetch(`/api/getGame/${props.params.gameid}/${username()}`);
+        if (!response.ok) {
+            window.location.href = "/404";
+        }
         if (username().trim()) {
             setIsUsernameSet(true);
         }
