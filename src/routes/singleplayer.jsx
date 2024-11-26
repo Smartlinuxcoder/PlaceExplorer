@@ -250,20 +250,36 @@ function PlaceExplorer() {
 
 
   return (
-    <main>
-    <Title>PlaceExplorer</Title>
-    <div class="geo-container">
-      <div id="pano" ref={panoRef} class="geo-pano"></div>
-      <div class="geo-controls">
-        <Autocomplete onMessage={handleChildMessage} />
-        <p class="lives">{hearts()}</p>
-        <div ref={mapRef} class="minimap" ></div>
+    <main class="relative bg-gray-900 text-white min-h-screen overflow-hidden">
+      <Title>PlaceExplorer</Title>
+      <div class="absolute top-0 left-0 w-72 h-72 bg-gradient-to-r from-pink-500 to-yellow-500 rounded-full opacity-30 blur-2xl animate-pulse"></div>
+      <div class="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full opacity-20 blur-3xl"></div>
+      <div class="absolute top-1/3 left-1/4 w-48 h-48 bg-gradient-to-r from-green-400 to-teal-500 rounded-full opacity-40 blur-lg animate-spin-slow"></div>
+      <div class="absolute top-10 right-1/3 w-60 h-60 bg-gradient-to-r from-red-500 to-orange-500 rounded-full opacity-25 blur-xl"></div>
+      <div class="absolute bottom-1/4 left-1/3 w-64 h-64 bg-gradient-to-r from-cyan-500 to-indigo-500 rounded-full opacity-30 blur-2xl"></div>
+      <div class="container mx-auto p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2">
+            <div id="pano" ref={panoRef} class="w-full h-[500px] rounded-lg overflow-hidden shadow-2xl border border-gray-700"></div>
+          </div>
+          <div class="space-y-6 relative z-60">
+            <div class="bg-gray-800/50 backdrop-blur-lg p-6 rounded-lg shadow-2xl border border-gray-700 relative z-50">
+              <Autocomplete class="z-50 relative pointer-events-auto" onMessage={handleChildMessage} />
+              <p class="text-3xl text-center mt-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent">
+                {hearts()}
+              </p>
+            </div>
+            <div ref={mapRef} class="relative z-40 w-full h-60 rounded-lg overflow-hidden shadow-2xl border border-gray-700"></div>
+            <div class="bg-gray-800/50 backdrop-blur-lg p-4 rounded-lg shadow-2xl border border-gray-700">
+              <div class="flex items-center justify-center space-x-2 text-lg">
+                {hint()}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="hint">
-        {hint()}
-      </div>
-    </div>
     </main>
+
   );
 }
 

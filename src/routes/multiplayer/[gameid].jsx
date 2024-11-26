@@ -399,9 +399,9 @@ function PlaceExplorer(props) {
                         <div class="lg:col-span-2">
                             <div ref={panoRef} class="w-full h-[500px] rounded-lg overflow-hidden shadow-2xl border border-gray-700"></div>
                         </div>
-                        <div class="space-y-6">
-                            <div class="bg-gray-800/50 backdrop-blur-lg p-6 rounded-lg shadow-2xl border border-gray-700">
-                                <Autocomplete class="z-50" onMessage={handleGuess} />
+                        <div class="space-y-6 relative z-60">
+                            <div class="bg-gray-800/50 backdrop-blur-lg p-6 rounded-lg shadow-2xl border border-gray-700 relative z-50">
+                                <Autocomplete class="z-50 relative pointer-events-auto" onMessage={handleGuess} />
                                 <p class="text-3xl text-center mt-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent">
                                     {hearts()}
                                 </p>

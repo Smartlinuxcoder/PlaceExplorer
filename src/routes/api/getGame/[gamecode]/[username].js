@@ -37,7 +37,9 @@ export async function POST({ params, request }) {
     [params.gamecode]
   );
 
-
+  await db.run(
+    `DELETE FROM users WHERE createdAt <= datetime('now', '-30 minutes')`
+  );
   const responseData = {
     games: games,       
     players: players,   
